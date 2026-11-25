@@ -6,6 +6,26 @@ Ik bouw op mijn laptop een klein internet na om te snappen hoe BGP werkt en hoe 
 
 Alles draait lokaal in containers met private IP adressen en AS nummers. Het is niet verbonden met echte routers.
 
+## In beeld
+
+![Demo van de kaart](docs/demo.gif)
+
+De beelden hieronder laten de kaart in drie situaties zien. Ze zijn gemaakt met testdata die overeenkomt met de uitkomsten in mijn lab.
+
+| Normaal | Gekaapt | Geblokkeerd |
+|---|---|---|
+| ![Normaal](docs/kaart-normaal.png) | ![Gekaapt](docs/kaart-gekaapt.png) | ![Geblokkeerd](docs/kaart-geblokkeerd.png) |
+
+```mermaid
+graph LR
+    klant["klant<br>AS 65004"] --- transit["transit<br>AS 65001"]
+    transit --- bank["bank<br>AS 65002"]
+    transit --- aanvaller["aanvaller<br>AS 65003"]
+    style aanvaller fill:#f85149,color:#fff
+```
+
+De kaart start je met `sudo python3 scripts/kaart.py`, daarna open je http://localhost:8000.
+
 ## Opbouw nu
 
 | Router | AS | Netwerk |
