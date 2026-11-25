@@ -48,8 +48,29 @@ De regel `no bgp ebgp-requires-policy` staat er nu in zodat routes zonder filter
 
 ## Planning
 
-- [ ] Drie routers die elkaar bereiken
+- [x] Drie routers die elkaar bereiken
 - [ ] DNS en een website voor de bank
-- [ ] Route kapen
+- [x] Route kapen
 - [ ] Filters en RPKI
 - [ ] Live kaart in de browser
+
+## Eerste kaping
+
+De bank kondigt 10.2.0.0/24 aan. Ik heb de aanvaller 10.2.0.0/25 laten aankondigen. Omdat een router altijd de meest specifieke route kiest, ging het verkeer voor 10.2.0.1 daarna naar de aanvaller, terwijl er bij de bank niks veranderd was.
+
+| Situatie | Route op transit | Gaat naar |
+|---|---|---|
+| Normaal | 10.2.0.0/24 via 10.255.12.2 | bank |
+| Gekaapt | 10.2.0.0/25 via 10.255.13.2 | aanvaller |
+| Met filter | 10.2.0.0/24 via 10.255.12.2 | bank |
+
+Daarna heb ik op transit een filter gezet zodat de aanvaller alleen zijn eigen netwerk mag aankondigen:
+
+```
+ip prefix-list AANVALLER-IN seq 5 permit 10.3.0.0/24
+router bgp 65001
+ address-family ipv4 unicast
+  neighbor 10.255.13.2 prefix-list AANVALLER-IN in
+```
+
+Het duurde even voordat de route terug was. Eerst dacht ik dat het filter niet werkte, maar bij de tweede controle klopte het wel.
