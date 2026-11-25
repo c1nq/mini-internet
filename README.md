@@ -1,5 +1,7 @@
 # Mini internet
 
+![Mini internet](docs/banner.png)
+
 Ik bouw op mijn laptop een klein internet na om te snappen hoe BGP werkt en hoe je het kunt aanvallen en beveiligen. BGP is het protocol waarmee grote netwerken op internet aan elkaar vertellen welke IP adressen bij hen zitten. Standaard wordt dat vooral op vertrouwen aangenomen, en dat wil ik zelf zien misgaan.
 
 Alles draait lokaal in containers met private IP adressen en AS nummers. Het is niet verbonden met echte routers.
