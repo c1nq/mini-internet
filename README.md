@@ -13,8 +13,9 @@ Alles draait lokaal in containers met private IP adressen en AS nummers. Het is 
 | transit | 65001 | 10.1.0.0/24 |
 | bank | 65002 | 10.2.0.0/24 |
 | aanvaller | 65003 | 10.3.0.0/24 |
+| klant | 65004 | 10.4.0.0/24 |
 
-De bank en de aanvaller zijn allebei alleen met transit verbonden.
+De bank, de aanvaller en de klant zijn alleen met transit verbonden.
 
 ## Nodig
 
@@ -49,7 +50,8 @@ De regel `no bgp ebgp-requires-policy` staat er nu in zodat routes zonder filter
 ## Planning
 
 - [x] Drie routers die elkaar bereiken
-- [ ] DNS en een website voor de bank
+- [x] Website voor de bank
+- [ ] DNS
 - [x] Route kapen
 - [ ] Filters en RPKI
 - [ ] Live kaart in de browser
@@ -74,3 +76,17 @@ router bgp 65001
 ```
 
 Het duurde even voordat de route terug was. Eerst dacht ik dat het filter niet werkte, maar bij de tweede controle klopte het wel.
+
+## Website kapen
+
+Bij de bank en de aanvaller draait nu een webserver. De klant vraagt steeds hetzelfde adres op, http://10.2.0.1.
+
+```bash
+sudo bash scripts/bezoek.sh   # Echte bank
+sudo bash scripts/kaping.sh
+sudo bash scripts/bezoek.sh   # GEKAAPT
+sudo bash scripts/filter.sh
+sudo bash scripts/bezoek.sh   # Echte bank
+```
+
+Wacht na het kapen en filteren een paar seconden, de routes zijn niet meteen aangepast. De klant merkt zelf niks, die gebruikt gewoon hetzelfde adres.
