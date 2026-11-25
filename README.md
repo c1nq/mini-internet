@@ -74,7 +74,7 @@ De regel `no bgp ebgp-requires-policy` staat er nu in zodat routes zonder filter
 - [ ] DNS
 - [x] Route kapen
 - [ ] Filters en RPKI
-- [ ] Live kaart in de browser
+- [x] Live kaart in de browser
 
 ## Eerste kaping
 
