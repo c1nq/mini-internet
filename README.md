@@ -73,6 +73,7 @@ De regel `no bgp ebgp-requires-policy` staat er nu in zodat routes zonder filter
 - [x] Website voor de bank
 - [ ] DNS
 - [x] Route kapen
+- [x] HTTPS en eigen CA met ACME
 - [ ] Filters en RPKI
 - [x] Live kaart in de browser
 
@@ -110,3 +111,16 @@ sudo bash scripts/bezoek.sh   # Echte bank
 ```
 
 Wacht na het kapen en filteren een paar seconden, de routes zijn niet meteen aangepast. De klant merkt zelf niks, die gebruikt gewoon hetzelfde adres.
+
+## Een geldig certificaat kapen
+
+De bank heeft een eigen certificaatautoriteit (step-ca, met ACME, hetzelfde protocol als Let's Encrypt) die een certificaat uitgeeft nadat hij heeft gecontroleerd wie `bank.lab` beheert. Die controle gebeurt door een bestand op te halen via HTTP, op het IP adres waar `bank.lab` naartoe wijst.
+
+Tijdens een normale situatie krijgt de bank dat certificaat. Tijdens de kaping heb ik gevraagd om hetzelfde certificaat vanaf de server van de aanvaller, en die kreeg het ook:
+
+```
+subject=CN=bank.lab
+issuer=O=Lab CA, CN=Lab CA Intermediate CA
+```
+
+Dit toont een bekend risico in het echte internet: een certificaatautoriteit vertrouwt op BGP om te bepalen wie een domein beheert. Wie de route kaapt, kan daardoor ook een geldig certificaat krijgen. Dit is in 2018 ook echt gebeurd bij MyEtherWallet.

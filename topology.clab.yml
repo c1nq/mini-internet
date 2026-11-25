@@ -32,12 +32,21 @@ topology:
       image: nginx:alpine
       network-mode: container:bank
       binds:
-        - web/bank:/usr/share/nginx/html:ro
+        - web/bank:/usr/share/nginx/html
     web-aanvaller:
       image: nginx:alpine
       network-mode: container:aanvaller
       binds:
-        - web/aanvaller:/usr/share/nginx/html:ro
+        - web/aanvaller:/usr/share/nginx/html
+    ca:
+      image: smallstep/step-ca:0.27.2
+      network-mode: container:klant
+      binds:
+        - configs/ca:/home/step
+      env:
+        DOCKER_STEPCA_INIT_NAME: "Lab CA"
+        DOCKER_STEPCA_INIT_DNS_NAMES: "ca.lab,10.4.0.1"
+        DOCKER_STEPCA_INIT_ACME: "true"
   links:
     - endpoints: ["transit:eth1", "bank:eth1"]
     - endpoints: ["transit:eth2", "aanvaller:eth1"]
