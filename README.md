@@ -123,4 +123,21 @@ subject=CN=bank.lab
 issuer=O=Lab CA, CN=Lab CA Intermediate CA
 ```
 
+![Certificaat voor de bank](docs/cert-bank.png)
+![Certificaat voor de aanvaller tijdens de kaping](docs/cert-aanvaller.png)
+![Kaart tijdens de HTTPS kaping](docs/kaart-https-gekaapt.png)
+
 Dit toont een bekend risico in het echte internet: een certificaatautoriteit vertrouwt op BGP om te bepalen wie een domein beheert. Wie de route kaapt, kan daardoor ook een geldig certificaat krijgen. Dit is in 2018 ook echt gebeurd bij MyEtherWallet.
+
+## Bronnen
+
+- [RFC 4271 — A Border Gateway Protocol 4 (BGP-4)](https://www.rfc-editor.org/rfc/rfc4271)
+- [RFC 8555 — Automatic Certificate Management Environment (ACME)](https://www.rfc-editor.org/rfc/rfc8555)
+- [FRRouting documentatie](https://docs.frrouting.org/)
+- [Containerlab documentatie](https://containerlab.dev/)
+- [Smallstep step-ca documentatie](https://smallstep.com/docs/step-ca/)
+- [acme.sh](https://github.com/acmesh-official/acme.sh)
+- Gavrichenkov, T. (2019). [Four Years of Breaking HTTPS with BGP Hijacking](https://pc.nanog.org/static/published/meetings/NANOG75/1892/20190219_Gavrichenkov_Four_Years_Of_v1.pdf), NANOG 75.
+- The Register (2018). [AWS DNS network hijack turns MyEtherWallet into ThievesEtherWallet](https://www.theregister.com/2018/04/24/myetherwallet_dns_hijack/)
+- Goldberg, S. (2018). [The MyEtherWallet.com hijack and why it's risky to hold cryptocurrency in a webapp](https://medium.com/@goldbe/the-myetherwallet-com-hijack-and-why-its-risky-to-hold-cryptocurrency-in-a-webapp-261131fad278)
+- SEED Labs, Internet Emulator (vergelijkbaar lab, ter inspiratie): [github.com/seed-labs/seed-emulator](https://github.com/seed-labs/seed-emulator)
