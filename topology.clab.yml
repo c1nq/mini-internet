@@ -1,0 +1,25 @@
+name: mini-internet
+
+topology:
+  defaults:
+    kind: linux
+    image: quay.io/frrouting/frr:10.2.1
+  nodes:
+    transit:
+      binds:
+        - configs/daemons:/etc/frr/daemons
+        - configs/vtysh.conf:/etc/frr/vtysh.conf
+        - configs/transit/frr.conf:/etc/frr/frr.conf
+    bank:
+      binds:
+        - configs/daemons:/etc/frr/daemons
+        - configs/vtysh.conf:/etc/frr/vtysh.conf
+        - configs/bank/frr.conf:/etc/frr/frr.conf
+    aanvaller:
+      binds:
+        - configs/daemons:/etc/frr/daemons
+        - configs/vtysh.conf:/etc/frr/vtysh.conf
+        - configs/aanvaller/frr.conf:/etc/frr/frr.conf
+  links:
+    - endpoints: ["transit:eth1", "bank:eth1"]
+    - endpoints: ["transit:eth2", "aanvaller:eth1"]
