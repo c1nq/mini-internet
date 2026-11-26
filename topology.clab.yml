@@ -5,7 +5,7 @@ topology:
     kind: linux
   nodes:
     transit:
-      image: quay.io/frrouting/frr:10.2.1
+      image: frr-debian-rpki:10.2.1
       binds:
         - configs/daemons:/etc/frr/daemons
         - configs/vtysh.conf:/etc/frr/vtysh.conf
@@ -47,6 +47,14 @@ topology:
         DOCKER_STEPCA_INIT_NAME: "Lab CA"
         DOCKER_STEPCA_INIT_DNS_NAMES: "ca.lab,10.4.0.1"
         DOCKER_STEPCA_INIT_ACME: "true"
+    routinator:
+      image: nlnetlabs/routinator:v0.13.2
+      network-mode: container:transit
+      binds:
+        - configs/routinator/tals-leeg:/home/routinator/.rpki-cache/tals
+        - configs/routinator/repo:/home/routinator/.rpki-cache/repository
+        - configs/routinator/exceptions.json:/home/routinator/exceptions.json:ro
+      cmd: --no-rir-tals -x /home/routinator/exceptions.json server --rtr 0.0.0.0:3323
   links:
     - endpoints: ["transit:eth1", "bank:eth1"]
     - endpoints: ["transit:eth2", "aanvaller:eth1"]

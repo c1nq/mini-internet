@@ -1,0 +1,2 @@
+[2026-11-26 11:36:58] ALERT via buur aanvaller (10.255.13.2): AS65003 kondigt 10.2.0.0/25 aan, maar alleen AS65002 (bank) is hiervoor geautoriseerd
+[2026-11-26 11:39:11] ALERT via buur aanvaller (10.255.13.2): AS65003 kondigt 10.2.0.0/25 aan, maar alleen AS65002 (bank) is hiervoor geautoriseerd

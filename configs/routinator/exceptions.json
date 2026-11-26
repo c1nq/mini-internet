@@ -1,0 +1,16 @@
+{
+  "slurmVersion": 1,
+  "validationOutputFilters": {
+    "prefixFilters": [],
+    "bgpsecFilters": []
+  },
+  "locallyAddedAssertions": {
+    "prefixAssertions": [
+      { "asn": 65001, "prefix": "10.1.0.0/24", "maxPrefixLength": 24, "comment": "transit" },
+      { "asn": 65002, "prefix": "10.2.0.0/24", "maxPrefixLength": 24, "comment": "bank" },
+      { "asn": 65003, "prefix": "10.3.0.0/24", "maxPrefixLength": 24, "comment": "aanvaller, eigen legitieme netwerk" },
+      { "asn": 65004, "prefix": "10.4.0.0/24", "maxPrefixLength": 24, "comment": "klant" }
+    ],
+    "bgpsecAssertions": []
+  }
+}
