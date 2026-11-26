@@ -74,7 +74,7 @@ De regel `no bgp ebgp-requires-policy` staat er nu in zodat routes zonder filter
 - [ ] DNS
 - [x] Route kapen
 - [x] HTTPS en eigen CA met ACME
-- [ ] Filters en RPKI
+- [x] Filters en RPKI
 - [x] Live kaart in de browser
 
 ## Eerste kaping
@@ -129,7 +129,39 @@ issuer=O=Lab CA, CN=Lab CA Intermediate CA
 
 Dit toont een bekend risico in het echte internet: een certificaatautoriteit vertrouwt op BGP om te bepalen wie een domein beheert. Wie de route kaapt, kan daardoor ook een geldig certificaat krijgen. Dit is in 2018 ook echt gebeurd bij MyEtherWallet.
 
+## RPKI als automatische verdediging
+
+De prefix-list filter uit het vorige experiment is handmatig: iemand moet
+eerst zien dat er een kaping is, en dan zelf een filter toevoegen. RPKI
+lost dit proactief op, met cryptografische herkomstvalidatie in plaats van
+een menselijke ingreep achteraf.
+
+Elk netwerk publiceert een lokale verklaring (via SLURM, RFC 8416, in
+plaats van een echte RIR omdat dit lab met prive adresruimte werkt) over
+welk AS nummer welk blok mag aankondigen, en tot welke prefixlengte.
+Routinator, dezelfde RPKI validator software die ook in productienetwerken
+wordt gebruikt, valideert dit en biedt het resultaat aan transit aan via
+het RPKI to Router protocol (RFC 6810). Een route-map op transit wijst
+elke aankondiging die als "invalid" wordt gemarkeerd automatisch af.
+
+Het resultaat: wanneer de aanvaller dezelfde /25 kaping van eerder opnieuw
+uitvoert, verandert de route bij transit niet. De aankondiging van de
+aanvaller verschijnt zelfs helemaal niet in de BGP tabel, RPKI weigert hem
+al voordat hij ooit een kans krijgt:
+
+```
+Routing entry for 10.2.0.0/24
+  Known via "bgp", distance 20, metric 0, best
+  * 10.255.12.2, via eth1, weight 1
+```
+
+Dezelfde route, voor en na de kaping. Geen mens hoefde in te grijpen.
+
 ## Bronnen
+- RFC 6480, An Infrastructure to Support Secure Internet Routing (RPKI)
+- RFC 6810, The Resource Public Key Infrastructure (RPKI) to Router Protocol
+- RFC 8416, Simplified Local Internet Number Resource Management with the RPKI (SLURM)
+- NLnet Labs, Routinator documentatie, https://routinator.docs.nlnetlabs.nl/
 
 - [RFC 4271 — A Border Gateway Protocol 4 (BGP-4)](https://www.rfc-editor.org/rfc/rfc4271)
 - [RFC 8555 — Automatic Certificate Management Environment (ACME)](https://www.rfc-editor.org/rfc/rfc8555)
