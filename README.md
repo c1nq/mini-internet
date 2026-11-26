@@ -157,7 +157,39 @@ Routing entry for 10.2.0.0/24
 
 Dezelfde route, voor en na de kaping. Geen mens hoefde in te grijpen.
 
+## Detectie: een eigen BGP hijack monitor
+
+RPKI voorkomt dat transit een ongeldige aankondiging accepteert, maar
+voorkoming is niet hetzelfde als weten dat er iets is gebeurd. Een
+Security Operations Center wil een poging zien en loggen, ook als de
+preventieve maatregel hem al heeft tegengehouden. Daarvoor is
+`scripts/monitor.py` toegevoegd: een los proces dat continu kijkt naar
+wat transit daadwerkelijk van elke buur ontvangt, nog voor RPKI of een
+route-map heeft gefilterd, en dat vergelijkt met dezelfde baseline die
+Routinator gebruikt (`configs/routinator/exceptions.json`): welk AS
+nummer welk blok mag aankondigen, en tot welke maximale prefixlengte.
+
+Dit vereist dat FRR de ruwe, ongefilterde aankondiging per buur bewaart
+in plaats van alleen het eindresultaat, met `soft-reconfiguration
+inbound`, en wordt uitgelezen via `show bgp ipv4 unicast neighbors
+<ip> received-routes`.
+
+Zodra de aanvaller de kaping van eerder opnieuw uitvoert, meldt de
+monitor dit binnen enkele seconden, in dit geval terwijl RPKI de route
+zelf al weigerde:
+
+```
+ALERT via buur aanvaller (10.255.13.2): AS65003 kondigt 10.2.0.0/25
+aan, maar alleen AS65002 (bank) is hiervoor geautoriseerd
+```
+
+Trekt de aanvaller de aankondiging weer in, dan verdwijnt de melding en
+blijft de monitor stil, zonder dat iemand hoefde in te grijpen om het
+te zien gebeuren.
+
 ## Bronnen
+- RIPE NCC, Routing Information Service (RIS), een voorbeeld van BGP monitoring op internetschaal, https://ris.ripe.net/
+- Cloudflare Radar, BGP hijack detectie in productie, https://radar.cloudflare.com/
 - RFC 6480, An Infrastructure to Support Secure Internet Routing (RPKI)
 - RFC 6810, The Resource Public Key Infrastructure (RPKI) to Router Protocol
 - RFC 8416, Simplified Local Internet Number Resource Management with the RPKI (SLURM)
